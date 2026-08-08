@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторские туры по всему миру</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <style>
+        /* ============================================================
+           ДИЗАЙН-ТОКЕНЫ — правь палитру здесь
+           ============================================================ */
+        :root {
+            --ink: #12302e; /* тёмный сосново-зелёный — основной текст */
+            --lake: #0d3b40; /* глубокий бирюзовый — герой */
+            --lake-2: #16585c; /* светлее, для градиента */
+            --paper: #f5f7f6; /* холодный светлый фон */
+            --sand: #ece5d8; /* тёплая песочная секция */
+            --ochre: #e0892e; /* акцент — войлок/солнце */
+            --ochre-deep: #c5701a;
+            --stone: #7d918b; /* приглушённый текст */
+            --line: #d9e0dc;
+            --radius: 14px;
+            --maxw: 1120px;
+            --shadow: 0 18px 40px -24px rgba(18, 48, 46, .45);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -.01em
+        }
+
+        img {
+            max-width: 100%;
+            display: block
+        }
+
+        a {
+            color: inherit
+        }
+
+        .wrap {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 0 24px
+        }
+
+        /* ---- Орнамент-разделитель (фирменный элемент) ---- */
+        .ornament {
+            height: 14px;
+            width: 100%;
+            background-image: repeating-linear-gradient(135deg, var(--ochre) 0 8px, transparent 8px 16px), repeating-linear-gradient(45deg, var(--ochre) 0 8px, transparent 8px 16px);
+            background-size: 16px 14px;
+            opacity: .55
+        }
+
+        /* ============================================================
+           ШАПКА
+           ============================================================ */
+        header.nav {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(245, 247, 246, .85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line)
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px
+        }
+
+        .brand {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .brand .dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--ochre);
+            box-shadow: 0 0 0 4px rgba(224, 137, 46, .2)
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px
+        }
+
+        .navlink {
+            font-family: 'Manrope';
+            font-weight: 600;
+            font-size: .92rem;
+            text-decoration: none;
+            color: var(--ink);
+            transition: color .15s
+        }
+
+        .navlink:hover {
+            color: var(--ochre-deep)
+        }
+
+        .nav a.cta {
+            font-family: 'Manrope';
+            font-weight: 700;
+            font-size: .92rem;
+            text-decoration: none;
+            background: var(--ink);
+            color: #fff;
+            padding: 11px 20px;
+            border-radius: 999px;
+            transition: transform .15s, background .15s
+        }
+
+        .nav a.cta:hover {
+            background: var(--lake);
+            transform: translateY(-1px)
+        }
+
+        /* ============================================================
+           ГЕРОЙ
+           ============================================================ */
+        .hero {
+            position: relative;
+            background: linear-gradient(160deg, var(--lake) 0%, var(--lake-2) 100%);
+            color: #fff;
+            overflow: hidden;
+            padding: 88px 0 0
+        }
+
+        .hero .wrap {
+            position: relative;
+            z-index: 2
+        }
+
+        .hero .eyebrow {
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: .78rem;
+            color: var(--ochre);
+            margin-bottom: 20px
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.6rem);
+            max-width: 14ch;
+            margin-bottom: 22px
+        }
+
+        .hero p.lead {
+            font-size: clamp(1.05rem, 2vw, 1.3rem);
+            max-width: 46ch;
+            color: rgba(255, 255, 255, .82);
+            margin-bottom: 34px
+        }
+
+        .hero .btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 70px
+        }
+
+        .btn {
+            font-family: 'Manrope';
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            padding: 15px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            transition: transform .15s, box-shadow .15s, background .15s
+        }
+
+        .btn-primary {
+            background: var(--ochre);
+            color: #2a1a07
+        }
+
+        .btn-primary:hover {
+            background: #f0974a;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -10px rgba(224, 137, 46, .6)
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, .1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .25)
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .18)
+        }
+
+        /* силуэт гор */
+        .mountains {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-top: -2px
+        }
+
+        /* ============================================================
+           СЕКЦИЯ ТУРОВ
+           ============================================================ */
+        .section {
+            padding: 84px 0
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 44px
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem)
+        }
+
+        .section-head .sub {
+            color: var(--stone);
+            max-width: 40ch
+        }
+
+        .count-pill {
+            font-family: 'Manrope';
+            font-weight: 600;
+            font-size: .85rem;
+            color: var(--ochre-deep);
+            background: rgba(224, 137, 46, .12);
+            padding: 6px 14px;
+            border-radius: 999px;
+            white-space: nowrap
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+            gap: 26px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .18s, box-shadow .18s;
+            cursor: pointer
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow)
+        }
+
+        .card:focus-visible {
+            outline: 3px solid var(--ochre);
+            outline-offset: 2px
+        }
+
+        .card-img {
+            aspect-ratio: 3/2;
+            background-size: cover;
+            background-position: center;
+            position: relative
+        }
+
+        .card-img .tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(18, 48, 46, .9);
+            color: #fff;
+            font-size: .74rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 999px;
+            letter-spacing: .02em
+        }
+
+        .card-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex: 1
+        }
+
+        .card-body h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px
+        }
+
+        .card-body .meta {
+            font-size: .85rem;
+            color: var(--stone);
+            margin-bottom: 14px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap
+        }
+
+        .card-body .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        .card-body p.desc {
+            font-size: .95rem;
+            color: #445049;
+            margin-bottom: 18px;
+            flex: 1
+        }
+
+        .card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto
+        }
+
+        .price {
+            font-family: 'Unbounded';
+            font-weight: 600;
+            font-size: 1.15rem
+        }
+
+        .price small {
+            font-family: 'Manrope';
+            font-weight: 500;
+            color: var(--stone);
+            font-size: .78rem;
+            display: block;
+            letter-spacing: 0
+        }
+
+        .card-foot .go {
+            font-weight: 700;
+            color: var(--ochre-deep);
+            font-size: .9rem
+        }
+
+        /* ============================================================
+           ОБО МНЕ / ГИД
+           ============================================================ */
+        .about {
+            background: var(--paper)
+        }
+
+        .about .layout {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 48px;
+            align-items: center
+        }
+
+        /* Скрапбук: фото 1 (портрет) — крупный, но лежит НИЖЕ по слоям;
+           фото 2 и 3 подняты на верхний слой и слегка перекрывают его по краю. */
+        .about-collage {
+            position: relative;
+            aspect-ratio: 1 / 1.05
+        }
+
+        .about-collage .ph {
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            border-radius: 14px;
+            border: 6px solid #fff;                 /* «поляроидная» рамка */
+            box-shadow: 0 24px 48px -22px rgba(18, 48, 46, .55)
+        }
+
+        /* фото 1 — крупный вертикальный портрет, нижний слой */
+        .about-collage .ph--main {
+            left: 0;
+            top: 6%;
+            width: 66%;
+            aspect-ratio: 3 / 4;
+            z-index: 1;
+            transform: rotate(-2deg)
+        }
+
+        /* фото 2 — вертикальное, справа сверху, верхний слой */
+        .about-collage .ph--b {
+            right: 2%;
+            top: 0;
+            width: 47%;
+            aspect-ratio: 3 / 4;
+            z-index: 2;
+            transform: rotate(2.6deg)
+        }
+
+        /* фото 3 — горизонтальное, снизу справа, самый верхний слой */
+        .about-collage .ph--c {
+            right: 2%;
+            bottom: 0;
+            width: 61%;
+            aspect-ratio: 16 / 10;
+            z-index: 3;
+            transform: rotate(-1.8deg)
+        }
+
+        /* охряный стикер-бейдж — на портрете, чуть ниже верхней кромки */
+        .about-badge {
+            position: absolute;
+            left: 8px;
+            top: 10%;
+            bottom: auto;
+            background: var(--ochre);
+            color: #2a1a07;
+            font-family: 'Unbounded';
+            font-weight: 600;
+            font-size: .82rem;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transform: rotate(-4deg);
+            box-shadow: 0 10px 24px -10px rgba(224, 137, 46, .7);
+            z-index: 4;
+            letter-spacing: .01em
+        }
+
+        .about .eyebrow {
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: .78rem;
+            color: var(--ochre-deep);
+            margin-bottom: 16px
+        }
+
+        .about h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 6px
+        }
+
+        .about .role {
+            color: var(--stone);
+            font-weight: 600;
+            margin-bottom: 20px
+        }
+
+        .about .intro p {
+            color: #3c453f;
+            margin-bottom: 14px
+        }
+
+        .about .achv {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 24px 0 28px
+        }
+
+        .about .achv .a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 9px 15px;
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .about .achv .a::before {
+            content: "✅";
+            font-size: .95rem;
+            line-height: 1
+        }
+
+        /* --- планшет: коллаж уходит над текстом; проценты масштабируются сами --- */
+        @media (max-width: 900px) {
+            .about .layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                align-items: stretch
+            }
+
+            .about-collage {
+                max-width: 520px;
+                margin: 0 auto
+            }
+        }
+
+        /* --- мобильный: тот же скрапбук, но со сдержанными углами и без выноса за край --- */
+        @media (max-width: 560px) {
+            .about-collage {
+                max-width: 100%;
+                aspect-ratio: 1 / 1.08
+            }
+
+            .about-collage .ph {
+                border-width: 5px
+            }
+
+            .about-collage .ph--main {
+                transform: rotate(-1.5deg)
+            }
+
+            .about-collage .ph--b {
+                transform: rotate(2deg)
+            }
+
+            .about-collage .ph--c {
+                transform: rotate(-1.4deg)
+            }
+
+            .about-badge {
+                left: 6px;
+                font-size: .74rem;
+                padding: 8px 12px
+            }
+        }
+
+        /* ============================================================
+           ПОЧЕМУ МЫ (песочная секция)
+           ============================================================ */
+        .why {
+            background: var(--sand)
+        }
+
+        .why .grid3 {
+            display: grid;
+            grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+            gap: 36px;
+            margin-top: 40px
+        }
+
+        .why .item h3 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .why .item .num {
+            font-family: 'Unbounded';
+            color: var(--ochre);
+            font-weight: 600
+        }
+
+        .why .item p {
+            color: #5a534655;
+            color: #615b4f
+        }
+
+        /* ============================================================
+           ПОДВАЛ
+           ============================================================ */
+        footer {
+            background: var(--ink);
+            color: rgba(255, 255, 255, .75);
+            padding: 56px 0 40px
+        }
+
+        footer .brand {
+            color: #fff;
+            margin-bottom: 14px
+        }
+
+        footer .cols {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, .75);
+            text-decoration: none
+        }
+
+        footer a:hover {
+            color: var(--ochre)
+        }
+
+        footer .muted {
+            font-size: .82rem;
+            color: rgba(255, 255, 255, .45);
+            margin-top: 30px
+        }
+
+        /* ============================================================
+           МОДАЛКА (детали тура + форма заявки)
+           ============================================================ */
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(12, 30, 28, .6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity .2s
+        }
+
+        .modal-bg.open {
+            display: flex;
+            opacity: 1
+        }
+
+        .modal {
+            background: var(--paper);
+            border-radius: 18px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 70px -20px rgba(0, 0, 0, .5)
+        }
+
+        .modal-img {
+            aspect-ratio: 16/9;
+            background-size: cover;
+            background-position: center;
+            position: relative
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .92);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1
+        }
+
+        .modal-inner {
+            padding: 28px
+        }
+
+        .modal-inner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 6px
+        }
+
+        .modal-inner .meta {
+            color: var(--stone);
+            font-size: .9rem;
+            margin-bottom: 18px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        /* --- контейнер описания: было .full как <p>, стало <div> с блоками --- */
+        .modal-inner .full {
+            margin-bottom: 22px;
+            color: #3c453f
+        }
+
+        /* интро — крупнее и темнее, задаёт тон */
+        .full .m-intro {
+            font-size: 1.05rem;
+            line-height: 1.55;
+            color: var(--ink);
+            font-weight: 500;
+            margin-bottom: 20px
+        }
+
+        /* чипсы-хайлайты — что «внутри» тура одним взглядом */
+        .full .m-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 26px
+        }
+
+        .full .m-chips span {
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--ochre-deep);
+            background: rgba(224, 137, 46, .12);
+            padding: 6px 13px;
+            border-radius: 999px;
+            line-height: 1.3
+        }
+
+        /* заголовок блока — маленький, «глазок» в фирменном стиле */
+        .full .m-section {
+            margin-bottom: 24px
+        }
+
+        .full .m-section h4 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 600;
+            font-size: .78rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--ink);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .full .m-section h4::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line)
+        }
+
+        /* этапы поездки — вертикальная лента с охряным маркером */
+        .full .m-steps {
+            list-style: none;
+            display: grid;
+            gap: 18px
+        }
+
+        .full .m-steps li {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--line)
+        }
+
+        .full .m-steps li::before {
+            content: "";
+            position: absolute;
+            left: -7px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--ochre);
+            box-shadow: 0 0 0 3px var(--paper)
+        }
+
+        .full .m-step-label {
+            display: block;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 3px;
+            font-size: .96rem
+        }
+
+        .full .m-steps li p {
+            font-size: .93rem;
+            line-height: 1.55;
+            color: #4a544d;
+            margin: 0
+        }
+
+        /* что включено — список с галочками */
+        .full .m-incl {
+            list-style: none;
+            display: grid;
+            gap: 8px
+        }
+
+        .full .m-incl li {
+            position: relative;
+            padding-left: 26px;
+            font-size: .93rem;
+            color: #3c453f
+        }
+
+        .full .m-incl li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--ochre-deep);
+            font-weight: 800
+        }
+
+        /* приписка внизу */
+        .full .m-note {
+            font-size: .9rem;
+            color: #4a544d;
+            background: #fff;
+            border: 1px dashed var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-top: 4px
+        }
+
+        .modal-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px
+        }
+
+        .modal-price .p {
+            font-family: 'Unbounded';
+            font-weight: 600;
+            font-size: 1.6rem;
+            color: var(--ink)
+        }
+
+        .modal-price .u {
+            color: var(--stone);
+            font-size: .85rem
+        }
+
+        .form-row {
+            margin-bottom: 14px
+        }
+
+        .form-row label {
+            display: block;
+            font-size: .85rem;
+            font-weight: 600;
+            margin-bottom: 6px
+        }
+
+        .form-row input, .form-row textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-family: 'Manrope';
+            font-size: .95rem;
+            background: #fff;
+            transition: border-color .15s
+        }
+
+        .form-row input:focus, .form-row textarea:focus {
+            outline: none;
+            border-color: var(--ochre)
+        }
+
+        .form-row textarea {
+            resize: vertical;
+            min-height: 70px
+        }
+
+        .two {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 12px
+        }
+
+        .submit {
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px
+        }
+
+        .form-hint {
+            font-size: .8rem;
+            color: var(--stone);
+            text-align: center;
+            margin-top: 12px
+        }
+
+        @media (max-width: 560px) {
+            .two {
+                grid-template-columns:1fr
+            }
+
+            .section {
+                padding: 60px 0
+            }
+
+            .hero {
+                padding-top: 60px
+            }
+
+            .navlink {
+                display: none
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                scroll-behavior: auto !important
+            }
+
+            .about-collage .ph--main,
+            .about-collage .ph--b,
+            .about-badge {
+                transform: none !important
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     ШАПКА
+     ============================================================ -->
+<header class="nav">
+    <div class="wrap nav-inner">
+        <div class="brand"><span class="dot"></span>Everwhere</div>
+        <nav class="nav-links">
+            <a href="#about" class="navlink">Обо мне</a>
+            <a href="#why" class="navlink">Почему со мной</a>
+            <a href="#tours" class="cta">Смотреть туры</a>
+        </nav>
+    </div>
+</header>
+
+<!-- ============================================================
+     ГЕРОЙ
+     ============================================================ -->
+<section class="hero">
+    <div class="wrap">
+        <div class="eyebrow">Авторские туры по всему миру</div>
+        <h1>Горы, озёра и кочевая тишина</h1>
+        <p class="lead">Небольшие группы, продуманные маршруты и места, до которых не доезжают турбусы. Оставьте заявку
+            — соберём поездку под вас. КРУТАЯ ФИШКА, ЕСЛИ НЕ НРАВИТСЯ ГОТОВЫЙ – ПИШИ, СОБЕРЁМ УНИКАЛЬНЫЙ ПОД ТЕБЯ</p>
+        <div class="btns">
+            <a href="#tours" class="btn btn-primary">Выбрать тур →</a>
+            <a href="#about" class="btn btn-ghost">Обо мне</a>
+            <a href="#why" class="btn btn-ghost">Почему со мной</a>
+        </div>
+    </div>
+    <!-- силуэт гор -->
+    <svg class="mountains" viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,180 L0,90 L160,40 L320,110 L480,30 L640,100 L800,50 L960,120 L1120,55 L1280,110 L1440,60 L1440,180 Z"
+              fill="#f5f7f6"/>
+    </svg>
+</section>
+
+<!-- ============================================================
+     ОБО МНЕ  (рендерится из объекта ABOUT — см. скрипт ниже)
+     ============================================================ -->
+<section class="section about" id="about">
+    <div class="wrap">
+        <div class="layout">
+            <div class="about-collage" id="aboutCollage"></div>
+            <div class="about-text">
+                <div class="eyebrow" id="aboutEyebrow"></div>
+                <h2 id="aboutName"></h2>
+                <div class="role" id="aboutRole"></div>
+                <div class="intro" id="aboutIntro"></div>
+                <div class="achv" id="aboutAchv"></div>
+                <a class="btn btn-primary" id="aboutCta" target="_blank" rel="noopener"></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     ПОЧЕМУ МЫ
+     ============================================================ -->
+<section class="section why" id="why">
+    <div class="wrap">
+        <h2>Почему со мной</h2>
+        <div class="grid3">
+            <div class="item"><h3><span class="num">01</span> Малые группы</h3>
+                <p>До 4 человек. Никакого массового туризма: больше внимания каждому участнику и гибкости в маршруте.</p></div>
+            <div class="item"><h3><span class="num">02</span> Проверенные маршруты</h3>
+                <p>Лично прошёл каждый маршрут, опробовал активности и знаю их тонкости и особенности.</p></div>
+            <div class="item"><h3><span class="num">03</span> Прозрачная цена</h3>
+                <p>Заявка ни к чему не обязывает, а в программе подробно расписано, что включено в цену, а что нет. </p></div>
+        </div>
+    </div>
+</section>
+
+<div class="ornament"></div>
+
+<!-- ============================================================
+     ТУРЫ  (рендерятся из массива — см. скрипт ниже)
+     ============================================================ -->
+<section class="section" id="tours">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <h2>Туры</h2>
+                <p class="sub"><br>Нажмите на карточку, чтобы оставить заявку.</p>
+            </div>
+            <div class="count-pill" id="countPill"></div>
+        </div>
+        <div class="grid" id="tourGrid"></div>
+    </div>
+</section>
+
+<div class="ornament"></div>
+
+<!-- ============================================================
+     ПОДВАЛ
+     ============================================================ -->
+<footer>
+    <div class="wrap">
+        <div class="cols">
+            <div>
+                <div class="brand"><span class="dot"></span>Everwhere</div>
+                <p>Авторские туры по всему миру</p>
+            </div>
+            <div>
+                <p><strong style="color:#fff">Связаться</strong></p>
+                <p><a id="footWa" href="#">WhatsApp</a></p>
+                <p><a id="footTg" href="#">Telegram</a></p>
+            </div>
+        </div>
+        <p class="muted">© <span id="yr"></span>Everwhere</p>
+    </div>
+</footer>
+
+<!-- ============================================================
+     МОДАЛКА
+     ============================================================ -->
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal">
+        <div class="modal-img" id="mImg">
+            <button class="modal-close" id="mClose" aria-label="Закрыть">×</button>
+        </div>
+        <div class="modal-inner">
+            <h3 id="mTitle"></h3>
+            <div class="meta" id="mMeta"></div>
+            <!-- было <p class="full">…</p> — теперь контейнер с блоками -->
+            <div class="full" id="mFull"></div>
+            <div class="modal-price"><span class="p" id="mPrice"></span><span class="u">за человека</span></div>
+
+            <!-- форма заявки. НЕ <form> — обычные хендлеры -->
+            <div class="form-row"><label>Ваше имя</label><input id="fName" placeholder="Как к вам обращаться"></div>
+            <div class="two">
+                <div class="form-row"><label>Телефон</label><input id="fPhone" placeholder="+ …"></div>
+                <div class="form-row"><label>Сколько человек</label><input id="fPeople" placeholder="2"
+                                                                           inputmode="numeric"></div>
+            </div>
+            <div class="form-row"><label>Когда хотите поехать / вопросы</label><textarea id="fNote"
+                                                                                         placeholder="Например: в начале августа, нужен трансфер из аэропорта"></textarea>
+            </div>
+            <button class="btn btn-primary submit" id="fSubmit">Отправить заявку в WhatsApp</button>
+            <p class="form-hint">Откроется WhatsApp с готовым сообщением — останется нажать «отправить».</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ============================================================
+       1) НАСТРОЙКИ
+       ============================================================ */
+    const CONFIG = {
+        brand: "Everwhere",
+        whatsapp: "79151845405",
+        telegram: "l_TypucT_l",
+    };
+
+    /* ============================================================
+       2) ОБО МНЕ
+       ============================================================ */
+    const ABOUT = {
+        eyebrow: "Немного обо мне",
+        name: "Виктор",
+        role: "Основатель Everwhere и ваш гид во всех приключениях",
+        intro: [
+            "Однажды я уехал в путешествие и не вернулся. С 2022 путешествия стали моей жизнью.",
+            "Десятки стран, сотни маршрутов, горы/пустыни/океаны/джунгли, сплавы/полёты/погружения. За каждой точкой на карте — мой личный опыт, а не чужой отзыв.",
+            "Я не рисую туры за компьютером, а каждый прохожу лично. Всё опасное сверх меры и просто унылое вылетает ещё на моём этапе, так что тебе остаётся только самое крутое.",
+        ],
+        achievements: [
+            "4.5 года путешествую по миру, исследовал 27 стран",
+            "Собрал множество историй, опыта и фотографий",
+            "2 авторских маршрута",
+            "3 прыжка с парашютом",
+            "Подъём на Кала-Патхар (5465 м)",
+            "Сертифицированный дайвер, сплавы 3 категории",
+            "Сноубордист, сёрфер и просто хороший человек :D",
+        ],
+        photos: ["photos/viktor/main.jpg", "photos/viktor/first.jpg", "photos/viktor/second.jpg"],
+        badge: "Фул-тайм путешественник с 2022",
+        ctaText: "Собрать поездку со мной →",
+    };
+
+    /* ============================================================
+       3) ТУРЫ
+
+          Все поля, кроме id/title/price,
+          НЕ обязательны: пустое поле просто не покажется.
+
+          • intro       — 1–2 фразы, «крючок» тура (крупный текст сверху)
+          • highlights  — короткие теги-хайлайты (что внутри одним взглядом)
+          • itinerary   — этапы поездки: { label: "заголовок", text: "…" }
+          • included    — что входит в цену (список с галочками)
+          • note        — приписка внизу (в рамочке)
+
+          • full        — старый вариант «одним куском». Если он задан
+                          и нет полей выше — покажется как обычный абзац
+                          (оставлено для совместимости / черновиков).
+       ============================================================ */
+    const TOURS = [
+        {
+            id: "Kazakhstan-8d",
+            title: "Южный Казахстан с адреналином",
+            tag: "Хит",
+            days: "8 дней",
+            region: "Казахстан, Алматы",
+            price: 100000,
+            img: "",
+            short: "Красные каньоны, бирюзовые озёра и 5 видов активности.",
+
+            intro: "Путешествие по югу Казахстана с самыми красивыми локациями региона и 5 видов активности: лошади, хайкинг, урок альпинизма, рафтинг и полёт на параплане. ",
+
+            highlights: [
+                "??Какие-то интересности??",
+            ],
+
+            itinerary: [
+                {
+                    label: "Дни 1–3 · Алматы и разгон",
+                    text: "Гуляем по интересным локациям Алматы. " +
+                        "Лазаем с инструктором по реальным скалам Тянь-Шаня, " +
+                            "поднимаемся на канатке на Талгарский перевал (3200 м), " +
+                                "откуда легкий хайк на пик Чимбулачка (3450). " +
+                        "Сплав по ледяной реке Чилик (3 категория).",
+                },
+                {
+                    label: "Дни 4-6 · Большой круг по югу",
+                    text: "Выезжаем на Чарынский каньон со спуском в Долину Замков. " +
+                        "Добираемся по грунтовке и верхом до затопленного леса озера Каинды. " +
+                        "Выходим к каскаду Кольсайских озёр с конным треком (или трекингом) от нижнего озера к верхнему.",
+                },
+                {
+                    label: "Дни 7-8 · Возвращение в Алматы",
+                    text: "Тандемный полёт на параплане над городом и лёгкий хайкинг на Кок-Жайляу. " +
+                        "Последний день разгрузочный на отдых и сувениры.",
+                },
+            ],
+
+            included: [
+                "Проживание",
+                "Завтраки",
+                "В городе такси комфорт+",
+                "За городом трансфер между всеми локациями на арендованном авто",
+                "Трансфер от/до аэропорта",
+                "Все входные билеты и взносы",
+                "Услуги инструктора и экипировка для активностей"
+            ],
+
+            note: "📩 Подробную программу по дням и список «что взять с собой» пришлю в личку → пиши.",
+        },
+        {
+            id: "Nepal",
+            title: "Непал",
+            tag: "В разработке",
+            days: "? дней",
+            region: "...",
+            price: "...",
+            img: "",
+            short: "...",
+            full: "Подробное описание маршрута…",
+        },
+
+    ];
+
+    /* ============================================================
+       4) Дальше — движок. Трогать не обязательно.
+       ============================================================ */
+    const palettes = [["#0d3b40", "#16585c"], ["#7a4a23", "#b5793a"], ["#3a4a2e", "#5e7544"], ["#3d2a4a", "#6a4a7a"], ["#1f3a52", "#356088"]];
+    const fmt = n => (typeof n === "number" ? n.toLocaleString("ru-RU") : n);
+    const waLink = text => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+    function cardImgStyle(t, i) {
+        if (t.img) return `background-image:url('${t.img}')`;
+        const [a, b] = palettes[i % palettes.length];
+        return `background-image:linear-gradient(150deg,${a},${b})`;
+    }
+
+    function renderTours() {
+        const grid = document.getElementById("tourGrid");
+        grid.innerHTML = "";
+        TOURS.forEach((t, i) => {
+            const el = document.createElement("div");
+            el.className = "card";
+            el.tabIndex = 0;
+            el.setAttribute("role", "button");
+            el.innerHTML = `
+      <div class="card-img" style="${cardImgStyle(t, i)}">${t.tag ? `<span class="tag">${t.tag}</span>` : ""}</div>
+      <div class="card-body">
+        <h3>${t.title}</h3>
+        <div class="meta"><span>📅 ${t.days}</span><span>📍 ${t.region}</span></div>
+        <p class="desc">${t.short}</p>
+        <div class="card-foot">
+          <div class="price">${fmt(t.price)} рублей <small>за человека</small></div>
+          <span class="go">Подробнее →</span>
+        </div>
+      </div>`;
+            el.addEventListener("click", () => openModal(i));
+            el.addEventListener("keydown", e => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openModal(i);
+                }
+            });
+            grid.appendChild(el);
+        });
+        document.getElementById("countPill").textContent = `${TOURS.length} ${plural(TOURS.length, "маршрут", "маршрута", "маршрутов")}`;
+    }
+
+    function plural(n, a, b, c) {
+        const m = n % 100, d = n % 10;
+        return m >= 11 && m <= 14 ? c : d === 1 ? a : d >= 2 && d <= 4 ? b : c;
+    }
+
+    /* ---- секция «обо мне» ---- */
+    function aboutImgStyle(url, i) {
+        if (url) return `background-image:url('${url}')`;
+        const [a, b] = palettes[(i + 2) % palettes.length];
+        return `background-image:linear-gradient(150deg,${a},${b})`;
+    }
+
+    function renderAbout() {
+        const collage = document.getElementById("aboutCollage");
+        const cls = ["ph--main", "ph--b", "ph--c"];
+        collage.innerHTML = ABOUT.photos.map((p, i) =>
+            `<div class="ph ${cls[i] || ""}" style="${aboutImgStyle(p, i)}"></div>`
+        ).join("") + (ABOUT.badge ? `<div class="about-badge">${ABOUT.badge}</div>` : "");
+
+        document.getElementById("aboutEyebrow").textContent = ABOUT.eyebrow;
+        document.getElementById("aboutName").textContent = ABOUT.name;
+        document.getElementById("aboutRole").textContent = ABOUT.role;
+        document.getElementById("aboutIntro").innerHTML = ABOUT.intro.map(p => `<p>${p}</p>`).join("");
+        document.getElementById("aboutAchv").innerHTML = ABOUT.achievements.map(a => `<span class="a">${a}</span>`).join("");
+
+        const cta = document.getElementById("aboutCta");
+        cta.textContent = ABOUT.ctaText;
+        cta.href = waLink(`Здравствуйте, ${ABOUT.name}! Хочу собрать поездку с вами.`);
+    }
+
+    /* ---- сборка описания тура из блоков ---- */
+    function renderTourBody(t) {
+        let html = "";
+        if (t.intro) html += `<p class="m-intro">${esc(t.intro)}</p>`;
+
+        if (Array.isArray(t.highlights) && t.highlights.length) {
+            html += `<div class="m-chips">${t.highlights.map(h => `<span>${esc(h)}</span>`).join("")}</div>`;
+        }
+
+        if (Array.isArray(t.itinerary) && t.itinerary.length) {
+            html += `<div class="m-section"><h4>Как пройдет поездка</h4><ul class="m-steps">` +
+                t.itinerary.map(s =>
+                    `<li><span class="m-step-label">${esc(s.label)}</span><p>${esc(s.text)}</p></li>`
+                ).join("") + `</ul></div>`;
+        }
+
+        if (Array.isArray(t.included) && t.included.length) {
+            html += `<div class="m-section"><h4>Что включено</h4><ul class="m-incl">` +
+                t.included.map(x => `<li>${esc(x)}</li>`).join("") + `</ul></div>`;
+        }
+
+        if (t.note) html += `<p class="m-note">${esc(t.note)}</p>`;
+
+        // запасной вариант: старое поле full одним абзацем
+        if (!html && t.full) html += `<p>${esc(t.full)}</p>`;
+        return html;
+    }
+
+    /* ---- модалка ---- */
+    let current = null;
+
+    function openModal(i) {
+        current = i;
+        const t = TOURS[i];
+        document.getElementById("mImg").style.cssText = cardImgStyle(t, i) + ";background-size:cover;background-position:center";
+        document.getElementById("mTitle").textContent = t.title;
+        document.getElementById("mMeta").innerHTML = `<span>📅 ${t.days}</span><span>📍 ${t.region}</span>`;
+        document.getElementById("mFull").innerHTML = renderTourBody(t);
+        document.getElementById("mPrice").textContent = fmt(t.price) + " руб";
+        document.getElementById("modalBg").classList.add("open");
+        document.getElementById("modalBg").scrollTop = 0;
+        document.querySelector(".modal").scrollTop = 0;
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        document.getElementById("modalBg").classList.remove("open");
+        document.body.style.overflow = "";
+    }
+
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("modalBg").addEventListener("click", e => {
+        if (e.target.id === "modalBg") closeModal();
+    });
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeModal();
+    });
+
+    /* ---- отправка заявки ---- */
+    document.getElementById("fSubmit").addEventListener("click", () => {
+        const t = TOURS[current];
+        const name = document.getElementById("fName").value.trim();
+        const phone = document.getElementById("fPhone").value.trim();
+        const people = document.getElementById("fPeople").value.trim();
+        const note = document.getElementById("fNote").value.trim();
+        if (!name || !phone) {
+            alert("Заполните имя и телефон 🙂");
+            return;
+        }
+        const msg = `Здравствуйте! Заявка с сайта.\nТур: ${t.title} (${fmt(t.price)} руб/чел)\nИмя: ${name}\nТелефон: ${phone}` +
+            (people ? `\nЧеловек: ${people}` : "") + (note ? `\nКомментарий: ${note}` : "");
+        window.open(waLink(msg), "_blank");
+    });
+
+    /* ---- контакты в подвале ---- */
+    const footWa = document.getElementById("footWa");
+    footWa.href = waLink("Здравствуйте! Интересуют туры.");
+    footWa.target = "_blank";
+    footWa.rel = "noopener";
+
+    const footTg = document.getElementById("footTg");
+    footTg.href = `https://t.me/${CONFIG.telegram}`;
+    footTg.target = "_blank";
+    footTg.rel = "noopener";
+
+    document.getElementById("yr").textContent = new Date().getFullYear();
+
+    renderTours();
+    renderAbout();
+</script>
+</body>
+</html>
