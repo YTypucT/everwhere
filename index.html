@@ -180,7 +180,7 @@
 
         .hero .eyebrow {
             font-weight: 600;
-            letter-spacing: .18em;
+            letter-spacing: .17em;
             text-transform: uppercase;
             font-size: .78rem;
             color: var(--ochre);
@@ -189,7 +189,7 @@
 
         .hero h1 {
             font-size: clamp(1.7rem, 6vw, 2.5rem);
-            max-width: 18ch;
+            max-width: 13ch;
             margin-bottom: 22px;
             overflow-wrap: break-word;
         }
@@ -319,7 +319,8 @@
             aspect-ratio: 3/2;
             background-size: cover;
             background-position: center;
-            position: relative
+            position: relative;
+            overflow: hidden           /* ← нужно для карусели: прячем соседние слайды */
         }
 
         .card-img .tag {
@@ -332,7 +333,124 @@
             font-weight: 600;
             padding: 5px 12px;
             border-radius: 999px;
-            letter-spacing: .02em
+            letter-spacing: .02em;
+            z-index: 3                 /* ← над слайдами и стрелками */
+        }
+
+        /* ============================================================
+           КАРУСЕЛЬ ФОТО (общая для карточки и модалки)
+           Разметка: .card-img / .modal-img (position:relative; overflow:hidden)
+             └ .c-track  — горизонтальная лента слайдов, двигается transform'ом
+                 └ .c-slide (×N) — фото на фоне (или градиент-заглушка)
+             └ .c-arrow.c-prev / .c-arrow.c-next — стрелки листания
+             └ .c-dots > .c-dot (×N) — индикаторы
+           Стрелки/точки появляются только если фото > 1 (см. JS).
+           ============================================================ */
+        .c-track {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            transition: transform .35s ease;
+            touch-action: pan-y        /* вертикальный скролл страницы работает, горизонталь — свайп */
+        }
+
+        .c-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center
+        }
+
+        .c-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .85);
+            color: var(--ink);
+            font-size: 1.5rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;                /* на десктопе показываем при наведении */
+            transition: opacity .15s, background .15s
+        }
+
+        .c-arrow:hover {
+            background: #fff
+        }
+
+        .c-prev {
+            left: 10px
+        }
+
+        .c-next {
+            right: 10px
+        }
+
+        .card-img:hover .c-arrow,
+        .modal-img:hover .c-arrow {
+            opacity: 1
+        }
+
+        .c-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 3
+        }
+
+        .c-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .55);
+            cursor: pointer;
+            transition: background .15s, transform .15s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .35)
+        }
+
+        .c-dot.active {
+            background: #fff;
+            transform: scale(1.25)
+        }
+
+        .modal-close {
+            z-index: 5                 /* ← крестик всегда выше стрелок */
+        }
+
+        /* на тач-устройствах наведения нет → стрелки видны всегда */
+        @media (hover: none) {
+            .c-arrow {
+                opacity: .92
+            }
+        }
+
+        @media (max-width: 560px) {
+            .c-arrow {
+                opacity: .92;
+                width: 32px;
+                height: 32px;
+                font-size: 1.35rem
+            }
+
+            .c-prev {
+                left: 8px
+            }
+
+            .c-next {
+                right: 8px
+            }
         }
 
         .card-body {
@@ -360,6 +478,45 @@
             display: inline-flex;
             align-items: center;
             gap: 5px
+        }
+
+        /* ---- Ближайшие даты (Вариант B, «тихий»): вторичный блок ----
+           Задача — читаемо, но НЕ громче заголовка и цены. Поэтому:
+           нет заливки-плашки, нейтральные тонкие чипы, приглушённый ярлык.
+           По весу встаёт вровень с мета-строкой «8 дней · Алматы». */
+        .card-dates {
+            margin-bottom: 16px
+        }
+
+        .card-dates .cd-head {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--stone);            /* приглушённый ярлык, не акцентный */
+            margin-bottom: 8px
+        }
+
+        .card-dates .cd-chips {
+            display: flex;
+            flex-wrap: wrap;                /* 2–6 дат переносятся по строкам сами */
+            gap: 6px
+        }
+
+        .card-dates .cd-chip {
+            background: #fff;
+            border: 1px solid var(--line);  /* нейтральная волосяная рамка */
+            color: #3c453f;                 /* нейтральный текст, без охры */
+            font-weight: 500;
+            font-size: .8rem;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap
+        }
+
+        /* на узких экранах длинную дату разрешаем переносить внутри чипа */
+        @media (max-width: 560px) {
+            .card-dates .cd-chip {
+                white-space: normal
+            }
         }
 
         .card-body p.desc {
@@ -676,7 +833,8 @@
             aspect-ratio: 16/9;
             background-size: cover;
             background-position: center;
-            position: relative
+            position: relative;
+            overflow: hidden           /* ← для карусели */
         }
 
         .modal-close {
@@ -983,10 +1141,10 @@
      ============================================================ -->
 <section class="hero">
     <div class="wrap">
-        <div class="eyebrow">Авторские туры по всему миру</div>
-        <h1>Красивые и немного экстремальные туры</h1>
-        <p class="lead">Небольшие группы, продуманные маршруты, места, до которых не доезжают турбусы и немного адреналина.
-            <br>Не нравятся готовые туры → пиши, соберём что-то уникальное для тебя.</p>
+        <div class="eyebrow">Виды, которые захватывают дух — <br> Маршруты, которые бросают вызов</div>
+        <h1>Авторские туры по всему миру</h1>
+        <p class="lead">Небольшие группы, продуманные маршруты, места, до которых не доезжают турбусы, и много активностей.
+            <br>Хочешь доработать программу тура → пиши, соберём что-то уникальное именно для тебя.</p>
         <div class="btns">
             <a href="#tours" class="btn btn-primary">Выбрать тур →</a>
             <a href="#about" class="btn btn-ghost">Обо мне</a>
@@ -1082,6 +1240,7 @@
 <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <div class="modal">
         <div class="modal-img" id="mImg">
+            <!-- сюда JS вставляет карусель (.c-track / .c-arrow / .c-dots) перед крестиком -->
             <button class="modal-close" id="mClose" aria-label="Закрыть">×</button>
         </div>
         <div class="modal-inner">
@@ -1149,6 +1308,19 @@
           Все поля, кроме id/title/price,
           НЕ обязательны: пустое поле просто не покажется.
 
+          • images      — массив путей к фото. Листается стрелками ‹ ›,
+                          точками и свайпом (на телефоне). Если задан —
+                          используется вместо img. Стрелки/точки появляются
+                          автоматически, только когда фото больше одного.
+                          Пример: images: ["photos/x/1.jpg", "photos/x/2.jpg"]
+          • img         — одиночное фото (fallback, если images не задан).
+
+          • dates       — массив ближайших заездов (строки). Показывается
+                          охряной плашкой в карточке. Порядок — как в массиве
+                          (пиши от ближайшего). Пусто/нет поля — плашки нет.
+                          Заезды ставишь сам, когда удобно.
+                          Пример: dates: ["15–22 августа", "5–12 сентября"]
+
           • intro       — 1–2 фразы, «крючок» тура (крупный текст сверху)
           • highlights  — короткие теги-хайлайты (что внутри одним взглядом)
           • itinerary   — этапы поездки: { label: "заголовок", text: "…" }
@@ -1167,10 +1339,22 @@
             days: "8 дней",
             region: "Алматы",
             price: 88000,
-            img: "photos/kazakhstan/tour_title.jpg",
-            short: "Красные каньоны, бирюзовые озёра и 5 видов активности.",
 
-            intro: "Путешествие по югу Казахстана с самыми красивыми локациями региона и 5 видов активности: лошади, хайкинг, урок альпинизма, рафтинг и полёт на параплане. ",
+            // одиночное фото (fallback):
+            images: [
+                "photos/kazakhstan/tour_title1.jpg",
+                "photos/kazakhstan/tour_title1.jpg",
+                "photos/kazakhstan/tour_title1.jpg",
+                "photos/kazakhstan/tour_title1.jpg",
+                "photos/kazakhstan/tour_title1.jpg",
+            ],
+
+            // ближайшие заезды — ставишь сам, когда удобно. Пиши от ближайшего.
+            dates: ["15–22 августа", "5–12 сентября", "26 сент – 3 окт"],
+
+            short: "Путешествие по югу Казахстана с самыми красивыми локациями региона и 5 видов активности: лошади, хайкинг, урок альпинизма, рафтинг и полёт на параплане.",
+
+            intro: "Путешествие по югу Казахстана с самыми красивыми локациями региона и 5 видов активности: лошади, хайкинг, урок альпинизма, рафтинг и полёт на параплане.",
 
             highlights: [
                 "Группа до 3-х человек",
@@ -1233,10 +1417,99 @@
     const waLink = text => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
     const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 
-    function cardImgStyle(t, i) {
-        if (t.img) return `background-image:url('${t.img}')`;
+    /* ---- плашка ближайших дат (Вариант A). Пусто/нет поля — плашки нет ---- */
+    function datesHtml(t) {
+        if (!Array.isArray(t.dates)) return "";
+        const list = t.dates.filter(Boolean);
+        if (!list.length) return "";
+        const label = list.length === 1 ? "Ближайшая дата" : "Ближайшие даты";
+        return `<div class="card-dates">
+            <div class="cd-head">${label}</div>
+            <div class="cd-chips">${list.map(d => `<span class="cd-chip">${esc(d)}</span>`).join("")}</div>
+          </div>`;
+    }
+
+    /* ---- фото тура: приоритет images[], иначе одиночный img, иначе градиент ---- */
+    function getImages(t) {
+        if (Array.isArray(t.images) && t.images.length) return t.images.filter(Boolean);
+        if (t.img) return [t.img];
+        return [];
+    }
+
+    /* фон одного слайда: реальное фото или градиент-заглушка */
+    function slideBg(url, i) {
+        if (url) return `background-image:url('${esc(url)}')`;
         const [a, b] = palettes[i % palettes.length];
         return `background-image:linear-gradient(150deg,${a},${b})`;
+    }
+
+    /* разметка карусели. Стрелки/точки — только если фото > 1 */
+    function carouselHtml(images, paletteIdx) {
+        const list = images.length ? images : [""];               // хотя бы один слайд-заглушка
+        const slides = list.map((u, si) =>
+            `<div class="c-slide" style="${slideBg(u, paletteIdx + si)}"></div>`).join("");
+
+        let controls = "";
+        if (list.length > 1) {
+            controls =
+                `<button class="c-arrow c-prev" type="button" aria-label="Предыдущее фото">‹</button>` +
+                `<button class="c-arrow c-next" type="button" aria-label="Следующее фото">›</button>` +
+                `<div class="c-dots">` +
+                list.map((_, di) => `<span class="c-dot${di === 0 ? " active" : ""}" role="button" aria-label="Фото ${di + 1}"></span>`).join("") +
+                `</div>`;
+        }
+        return `<div class="c-track">${slides}</div>${controls}`;
+    }
+
+    /* оживляем карусель внутри root (.card-img или .modal-img):
+       стрелки, точки, свайп на тач-экранах. Для клавиатуры в модалке
+       наружу отдаётся root._go(index). */
+    function initCarousel(root) {
+        const track = root.querySelector(".c-track");
+        if (!track) return;
+        const count = track.children.length;
+        root.dataset.idx = 0;
+
+        // защита от «клика-открытия модалки» после свайпа по фото.
+        // вешаем один раз на root (для модалки root переиспользуется).
+        if (!root._clickGuardBound) {
+            root._clickGuardBound = true;
+            root.addEventListener("click", e => {
+                if (root._moved) { e.stopPropagation(); e.preventDefault(); root._moved = false; }
+            }, true);
+        }
+
+        if (count <= 1) { root._go = null; return; }              // одно фото — управление не нужно
+
+        const dots = [...root.querySelectorAll(".c-dot")];
+
+        function go(i) {
+            i = (i + count) % count;                               // зацикливание
+            track.style.transform = `translateX(${-i * 100}%)`;
+            root.dataset.idx = i;
+            dots.forEach((d, di) => d.classList.toggle("active", di === i));
+        }
+        root._go = go;
+
+        const prev = root.querySelector(".c-prev");
+        const next = root.querySelector(".c-next");
+        // stopPropagation — чтобы клик по стрелке не открывал модалку (в карточке)
+        prev && prev.addEventListener("click", e => { e.stopPropagation(); go(+root.dataset.idx - 1); });
+        next && next.addEventListener("click", e => { e.stopPropagation(); go(+root.dataset.idx + 1); });
+        dots.forEach((d, di) => d.addEventListener("click", e => { e.stopPropagation(); go(di); }));
+
+        // свайп пальцем
+        let sx = null;
+        track.addEventListener("touchstart", e => { sx = e.touches[0].clientX; root._moved = false; }, {passive: true});
+        track.addEventListener("touchmove", e => {
+            if (sx != null && Math.abs(e.touches[0].clientX - sx) > 10) root._moved = true;
+        }, {passive: true});
+        track.addEventListener("touchend", e => {
+            if (sx == null) return;
+            const dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 40) go(+root.dataset.idx + (dx < 0 ? 1 : -1));
+            sx = null;
+        });
     }
 
     function renderTours() {
@@ -1248,10 +1521,14 @@
             el.tabIndex = 0;
             el.setAttribute("role", "button");
             el.innerHTML = `
-      <div class="card-img" style="${cardImgStyle(t, i)}">${t.tag ? `<span class="tag">${t.tag}</span>` : ""}</div>
+      <div class="card-img">
+        ${carouselHtml(getImages(t), i)}
+        ${t.tag ? `<span class="tag">${t.tag}</span>` : ""}
+      </div>
       <div class="card-body">
         <h3>${t.title}</h3>
         <div class="meta"><span>📅 ${t.days}</span><span>📍 ${t.region}</span></div>
+        ${datesHtml(t)}
         <p class="desc">${t.short}</p>
         <div class="card-foot">
           <div class="price">${fmt(t.price)} рублей <small>за человека</small></div>
@@ -1260,12 +1537,16 @@
       </div>`;
             el.addEventListener("click", () => openModal(i));
             el.addEventListener("keydown", e => {
+                // реагируем только когда сфокусирована сама карточка,
+                // а не вложенные кнопки-стрелки
+                if (e.target !== el) return;
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     openModal(i);
                 }
             });
             grid.appendChild(el);
+            initCarousel(el.querySelector(".card-img"));          // оживляем карусель карточки
         });
         document.getElementById("countPill").textContent = `${TOURS.length} ${plural(TOURS.length, "маршрут", "маршрута", "маршрутов")}`;
     }
@@ -1334,7 +1615,13 @@
     function openModal(i) {
         current = i;
         const t = TOURS[i];
-        document.getElementById("mImg").style.cssText = cardImgStyle(t, i) + ";background-size:cover;background-position:center";
+
+        // пересобираем карусель в шапке модалки, сохраняя кнопку-крестик
+        const mImg = document.getElementById("mImg");
+        [...mImg.querySelectorAll(".c-track, .c-arrow, .c-dots")].forEach(n => n.remove());
+        mImg.insertAdjacentHTML("afterbegin", carouselHtml(getImages(t), i));
+        initCarousel(mImg);
+
         document.getElementById("mTitle").textContent = t.title;
         document.getElementById("mMeta").innerHTML = `<span>📅 ${t.days}</span><span>📍 ${t.region}</span>`;
         document.getElementById("mFull").innerHTML = renderTourBody(t);
@@ -1355,7 +1642,14 @@
         if (e.target.id === "modalBg") closeModal();
     });
     document.addEventListener("keydown", e => {
-        if (e.key === "Escape") closeModal();
+        if (e.key === "Escape") { closeModal(); return; }
+        // ← → листают фото в открытой модалке
+        const mImg = document.getElementById("mImg");
+        const open = document.getElementById("modalBg").classList.contains("open");
+        if (open && mImg._go) {
+            if (e.key === "ArrowLeft") mImg._go(+mImg.dataset.idx - 1);
+            if (e.key === "ArrowRight") mImg._go(+mImg.dataset.idx + 1);
+        }
     });
 
     /* ---- отправка заявки ---- */
