@@ -684,6 +684,28 @@
             line-height: 1
         }
 
+        @media (max-width: 900px) {
+            .about .layout {
+                grid-template-columns: 1fr;   /* ← коллаж уходит НАД текстом */
+                gap: 40px;
+                align-items: stretch;
+            }
+            .about-collage {
+                width: 100%;
+                max-width: 520px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .about-collage { max-width: 100%; aspect-ratio: 1 / 1.08 }
+            .about-collage .ph { border-width: 5px }
+            .about-collage .ph--main { transform: rotate(-1.5deg) }
+            .about-collage .ph--b    { transform: rotate(2deg) }
+            .about-collage .ph--c    { transform: rotate(-1.4deg) }
+            .about-badge { left: 6px; font-size: .74rem; padding: 8px 12px }
+        }
+
         /* ---- Вторичная ссылка на личный канал (под основной кнопкой) ----
            Тише главного CTA: текстовая ссылка, а не плашка. Работает как
            «доказательство» слов из секции: пойди и полистай. */
