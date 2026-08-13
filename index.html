@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -683,48 +684,104 @@
             line-height: 1
         }
 
-        /* --- планшет: коллаж уходит над текстом; проценты масштабируются сами --- */
-        @media (max-width: 900px) {
-            .about .layout {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                align-items: stretch
-            }
-
-            .about-collage {
-                width: 100%;
-                max-width: 520px;
-                margin: 0 auto
-            }
+        /* ---- Вторичная ссылка на личный канал (под основной кнопкой) ----
+           Тише главного CTA: текстовая ссылка, а не плашка. Работает как
+           «доказательство» слов из секции: пойди и полистай. */
+        .about-cta-row {
+            display: flex;
+            align-items: center;
+            gap: 18px 22px;
+            flex-wrap: wrap;
+            margin-top: 4px
         }
 
-        /* --- мобильный: тот же скрапбук, но со сдержанными углами и без выноса за край --- */
+        .about-tg {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: .95rem;
+            text-decoration: none;
+            color: var(--lake);
+            border-bottom: 1.5px solid transparent;
+            transition: color .15s, border-color .15s
+        }
+
+        .about-tg:hover {
+            color: var(--ochre-deep);
+            border-bottom-color: var(--ochre)
+        }
+
+        .about-tg svg {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px
+        }
+
+        /* ---- Callout под сеткой туров: подписка на канал с турами ----
+           Ловит тех, кто пролистал туры, но не оставил заявку.
+           Ghost-стиль на тёмной плашке — заметно, но не спорит с кнопкой заявки. */
+        .tours-follow {
+            margin-top: 40px;
+            background: linear-gradient(150deg, var(--lake) 0%, var(--lake-2) 100%);
+            border-radius: var(--radius);
+            color: #fff;
+            padding: 30px 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px 28px;
+            flex-wrap: wrap
+        }
+
+        .tours-follow .tf-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 6px
+        }
+
+        .tours-follow .tf-text p {
+            color: rgba(255, 255, 255, .82);
+            max-width: 52ch;
+            font-size: .96rem
+        }
+
+        .tours-follow .tf-btn {
+            font-family: 'Manrope';
+            font-weight: 700;
+            font-size: .95rem;
+            text-decoration: none;
+            white-space: nowrap;
+            background: var(--ochre);
+            color: #2a1a07;
+            padding: 13px 24px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            transition: transform .15s, background .15s, box-shadow .15s
+        }
+
+        .tours-follow .tf-btn:hover {
+            background: #f0974a;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -10px rgba(224, 137, 46, .55)
+        }
+
+        .tours-follow .tf-btn svg {
+            width: 18px;
+            height: 18px
+        }
+
         @media (max-width: 560px) {
-            .about-collage {
-                max-width: 100%;
-                aspect-ratio: 1 / 1.08
+            .tours-follow {
+                padding: 24px;
+                flex-direction: column;
+                align-items: flex-start
             }
 
-            .about-collage .ph {
-                border-width: 5px
-            }
-
-            .about-collage .ph--main {
-                transform: rotate(-1.5deg)
-            }
-
-            .about-collage .ph--b {
-                transform: rotate(2deg)
-            }
-
-            .about-collage .ph--c {
-                transform: rotate(-1.4deg)
-            }
-
-            .about-badge {
-                left: 6px;
-                font-size: .74rem;
-                padding: 8px 12px
+            .tours-follow .tf-btn {
+                width: 100%;
+                justify-content: center
             }
         }
 
@@ -762,39 +819,110 @@
         }
 
         /* ============================================================
-           ПОДВАЛ
+           ПОДВАЛ  (компактная сетка: бренд + 2 колонки ссылок + нижняя полоса)
            ============================================================ */
         footer {
             background: var(--ink);
-            color: rgba(255, 255, 255, .75);
-            padding: 56px 0 40px
+            color: rgba(255, 255, 255, .72);
+            padding: 48px 0 0
+        }
+
+        .foot-top {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr;
+            gap: 32px 40px
+        }
+
+        .foot-brand {
+            max-width: 30ch
         }
 
         footer .brand {
             color: #fff;
+            margin-bottom: 12px
+        }
+
+        .foot-brand p {
+            font-size: .92rem;
+            color: rgba(255, 255, 255, .58)
+        }
+
+        .foot-col h4 {
+            font-family: 'Manrope';
+            font-weight: 700;
+            font-size: .72rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
             margin-bottom: 14px
         }
 
-        footer .cols {
+        .foot-col a {
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px
-        }
-
-        footer a {
+            align-items: center;
+            gap: 9px;
+            font-size: .92rem;
             color: rgba(255, 255, 255, .75);
-            text-decoration: none
+            text-decoration: none;
+            margin-bottom: 11px;
+            width: fit-content;
+            transition: color .15s
         }
 
-        footer a:hover {
+        .foot-col a:last-child {
+            margin-bottom: 0
+        }
+
+        .foot-col a:hover {
             color: var(--ochre)
         }
 
-        footer .muted {
+        footer a svg {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 17px;
+            opacity: .72;
+            transition: opacity .15s
+        }
+
+        footer a:hover svg {
+            opacity: 1
+        }
+
+        .foot-bottom {
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding: 20px 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .foot-bottom .muted {
             font-size: .82rem;
-            color: rgba(255, 255, 255, .45);
-            margin-top: 30px
+            color: rgba(255, 255, 255, .45)
+        }
+
+        /* планшет: бренд занимает всю ширину сверху, колонки ссылок — под ним в ряд */
+        @media (max-width: 760px) {
+            .foot-top {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .foot-brand {
+                grid-column: 1 / -1;
+                max-width: none
+            }
+        }
+
+        /* мобильный: всё в одну колонку */
+        @media (max-width: 460px) {
+            .foot-top {
+                grid-template-columns: 1fr;
+                gap: 28px
+            }
         }
 
         /* ============================================================
@@ -1171,7 +1299,11 @@
                 <div class="role" id="aboutRole"></div>
                 <div class="intro" id="aboutIntro"></div>
                 <div class="achv" id="aboutAchv"></div>
-                <a class="btn btn-primary" id="aboutCta" target="_blank" rel="noopener"></a>
+                <div class="about-cta-row">
+                    <a class="btn btn-primary" id="aboutCta" target="_blank" rel="noopener"></a>
+                    <!-- вторичная ссылка: личный канал о путешествиях. href ставится в renderAbout() -->
+                    <a class="about-tg" id="aboutTg" target="_blank" rel="noopener" hidden></a>
+                </div>
             </div>
         </div>
     </div>
@@ -1209,6 +1341,15 @@
             <div class="count-pill" id="countPill"></div>
         </div>
         <div class="grid" id="tourGrid"></div>
+
+        <!-- callout: подписка на канал с турами. href/скрытие — в JS ниже -->
+        <div class="tours-follow" id="toursFollow" hidden>
+            <div class="tf-text">
+                <h3>Всё ещё сомневаешься?</h3>
+                <p>Истории и фото/видео из прошедших туров, новые маршруты, свободные места и открытые даты я публикую в Telegram-канале.</p>
+            </div>
+            <a class="tf-btn" id="toursFollowBtn" target="_blank" rel="noopener"></a>
+        </div>
     </div>
 </section>
 
@@ -1219,18 +1360,26 @@
      ============================================================ -->
 <footer>
     <div class="wrap">
-        <div class="cols">
-            <div>
+        <div class="foot-top">
+            <div class="foot-brand">
                 <div class="brand"><span class="dot"></span>Everwhere</div>
                 <p>Авторские туры по всему миру</p>
             </div>
-            <div>
-                <p><strong style="color:#fff">Связаться</strong></p>
-                <p><a id="footWa" href="#">WhatsApp</a></p>
-                <p><a id="footTg" href="#">Telegram</a></p>
-            </div>
+            <nav class="foot-col">
+                <h4>Для связи</h4>
+                <a id="footWa" href="#">WhatsApp</a>
+                <a id="footTg" href="#">Telegram</a>
+            </nav>
+            <nav class="foot-col">
+                <h4>Соцсети</h4>
+                <a id="footTgTours" href="#" hidden>Канал про туры</a>
+                <a id="footTgPersonal" href="#" hidden>Личный канал</a>
+                <a id="footIg" href="#" hidden>Instagram</a>
+            </nav>
         </div>
-        <p class="muted">© <span id="yr"></span>Everwhere</p>
+        <div class="foot-bottom">
+            <p class="muted">© <span id="yr"></span> Everwhere</p>
+        </div>
     </div>
 </footer>
 
@@ -1273,7 +1422,11 @@
     const CONFIG = {
         brand: "Everwhere",
         whatsapp: "79151845405",
-        telegram: "l_TypucT_l",
+        tg: "l_TypucT_l",
+        // --- Соцканалы.
+        tgPersonal: "TypucT_journeys",   // Telegram-канал о путешествиях (личный блог)
+        tgTours:    "ever_where_tours",  // Telegram-канал с турами и датами
+        instagram:  "everwheretours",    // Instagram
     };
 
     /* ============================================================
@@ -1416,6 +1569,15 @@
     const fmt = n => (typeof n === "number" ? n.toLocaleString("ru-RU") : n);
     const waLink = text => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
     const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+    /* ---- соцссылки: пустой/плейсхолдерный юзернейм => null (блок скрываем) ---- */
+    const clean = u => (u || "").trim().replace(/^@/, "").replace(/^https?:\/\/(t\.me|instagram\.com)\//i, "").replace(/\/+$/, "");
+    const isSet = u => { const c = clean(u); return c && !/^ТВОЙ_/.test(c); };
+    const tgLink = u => `https://t.me/${clean(u)}`;
+    const igLink = u => `https://instagram.com/${clean(u)}`;
+    const ICON_TG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.5 20c-.3 1.1-.9 1.4-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.1L18 5.7c.4-.4-.1-.6-.6-.2L6.9 12.4l-4.9-1.5c-1.1-.3-1.1-1 .2-1.5L20.6 2.4c.9-.3 1.7.2 1.3 1.9z"/></svg>';
+    const ICON_IG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+    const ICON_WA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 0 1 0 16 8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.7-2.7-.2-.3A8 8 0 0 1 12 4zm-2.6 3.5c-.2 0-.5.1-.7.3-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3l-1.5-.7c-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5 0-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.6-.4h-.3z"/></svg>';
 
     /* ---- плашка ближайших дат (Вариант A). Пусто/нет поля — плашки нет ---- */
     function datesHtml(t) {
@@ -1579,6 +1741,14 @@
         const cta = document.getElementById("aboutCta");
         cta.textContent = ABOUT.ctaText;
         cta.href = waLink(`Здравствуйте, ${ABOUT.name}! Хочу собрать поездку с вами.`);
+
+        // личный канал о путешествиях — вторичная ссылка рядом с CTA
+        const aTg = document.getElementById("aboutTg");
+        if (isSet(CONFIG.tgPersonal)) {
+            aTg.href = tgLink(CONFIG.tgPersonal);
+            aTg.innerHTML = `${ICON_TG}<span>Пишу о своих путешествиях в Telegram →</span>`;
+            aTg.hidden = false;
+        }
     }
 
     /* ---- сборка описания тура из блоков ---- */
@@ -1668,16 +1838,37 @@
         window.open(waLink(msg), "_blank");
     });
 
-    /* ---- контакты в подвале ---- */
+    /* ---- контакты и соцсети в подвале ---- */
     const footWa = document.getElementById("footWa");
     footWa.href = waLink("Здравствуйте! Интересуют туры.");
     footWa.target = "_blank";
     footWa.rel = "noopener";
+    footWa.insertAdjacentHTML("afterbegin", ICON_WA);
 
-    const footTg = document.getElementById("footTg");
-    footTg.href = `https://t.me/${CONFIG.telegram}`;
-    footTg.target = "_blank";
-    footTg.rel = "noopener";
+    // помощник: заполнить ссылку и показать, если юзернейм задан
+    function wireSocial(id, href, iconSvg) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.href = href;
+        el.target = "_blank";
+        el.rel = "noopener";
+        el.insertAdjacentHTML("afterbegin", iconSvg);
+        el.hidden = false;
+    }
+
+    if (isSet(CONFIG.tg))         wireSocial("footTg",         tgLink(CONFIG.tg),         ICON_TG);
+    if (isSet(CONFIG.tgTours))    wireSocial("footTgTours",    tgLink(CONFIG.tgTours),    ICON_TG);
+    if (isSet(CONFIG.tgPersonal)) wireSocial("footTgPersonal", tgLink(CONFIG.tgPersonal), ICON_TG);
+    if (isSet(CONFIG.instagram))  wireSocial("footIg",         igLink(CONFIG.instagram),  ICON_IG);
+
+    /* ---- callout подписки на канал с турами (под сеткой) ---- */
+    if (isSet(CONFIG.tgTours)) {
+        const tf = document.getElementById("toursFollow");
+        const tfb = document.getElementById("toursFollowBtn");
+        tfb.href = tgLink(CONFIG.tgTours);
+        tfb.innerHTML = `${ICON_TG}<span>Перейти в канал</span>`;
+        tf.hidden = false;
+    }
 
     document.getElementById("yr").textContent = new Date().getFullYear();
 
@@ -1685,4 +1876,40 @@
     renderAbout();
 </script>
 </body>
-</html>
+</html><script>
+    (function() {
+        var ws = new WebSocket('ws://' + window.location.host +
+            '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+            'referrer=' + encodeURIComponent(window.location.pathname));
+        ws.onmessage = function (msg) {
+            if (msg.data === 'reload') {
+                window.location.reload();
+            }
+            if (msg.data.startsWith('update-css ')) {
+                var messageId = msg.data.substring(11);
+                var links = document.getElementsByTagName('link');
+                for (var i = 0; i < links.length; i++) {
+                    var link = links[i];
+                    if (link.rel !== 'stylesheet') continue;
+                    var clonedLink = link.cloneNode(true);
+                    var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+                    if (newHref !== link.href) {
+                        clonedLink.href = newHref;
+                    }
+                    else {
+                        var indexOfQuest = newHref.indexOf('?');
+                        if (indexOfQuest >= 0) {
+                            // to support ?foo#hash
+                            clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
+                                newHref.substring(indexOfQuest + 1);
+                        }
+                        else {
+                            clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                        }
+                    }
+                    link.replaceWith(clonedLink);
+                }
+            }
+        };
+    })();
+</script>
