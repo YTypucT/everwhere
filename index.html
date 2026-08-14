@@ -1294,7 +1294,7 @@
         <div class="eyebrow">Виды, которые захватывают дух — <br> Маршруты, которые бросают вызов</div>
         <h1>Авторские туры по всему миру</h1>
         <p class="lead">Небольшие группы, продуманные маршруты, места, до которых не доезжают турбусы, и много активностей.
-            <br>Хочешь доработать программу тура → пиши, соберём что-то уникальное именно для тебя.</p>
+            <br>Хочешь доработать программу тура - пиши. Придумаем  что-нибудь уникальное именно для тебя.</p>
         <div class="btns">
             <a href="#tours" class="btn btn-primary">Выбрать тур →</a>
             <a href="#about" class="btn btn-ghost">Обо мне</a>
@@ -1518,14 +1518,14 @@
             // одиночное фото (fallback):
             images: [
                 "photos/kazakhstan/tour_title1.jpg",
-                "photos/kazakhstan/tour_title1.jpg",
-                "photos/kazakhstan/tour_title1.jpg",
-                "photos/kazakhstan/tour_title1.jpg",
-                "photos/kazakhstan/tour_title1.jpg",
+                "photos/kazakhstan/tour_title2.jpg",
+                "photos/kazakhstan/tour_title3.jpg",
+                "photos/kazakhstan/tour_title4.jpg",
+                "photos/kazakhstan/tour_title5.jpg",
             ],
 
             // ближайшие заезды — ставишь сам, когда удобно. Пиши от ближайшего.
-            dates: ["15–22 августа", "5–12 сентября", "26 сент – 3 окт"],
+            dates: ["15–22 сентября", "23-30 сентября"],
 
             short: "Путешествие по югу Казахстана с самыми красивыми локациями региона и 5 видов активности: лошади, хайкинг, урок альпинизма, рафтинг и полёт на параплане.",
 
@@ -1762,7 +1762,7 @@
 
         const cta = document.getElementById("aboutCta");
         cta.textContent = ABOUT.ctaText;
-        cta.href = waLink(`Здравствуйте, ${ABOUT.name}! Хочу собрать поездку с вами.`);
+        cta.href = waLink(`Приветствую, ${ABOUT.name}! Хочу собрать поездку с тобой.`);
 
         // личный канал о путешествиях — вторичная ссылка рядом с CTA
         const aTg = document.getElementById("aboutTg");
@@ -1855,14 +1855,14 @@
             alert("Заполните имя и телефон 🙂");
             return;
         }
-        const msg = `Здравствуйте! Заявка с сайта.\nТур: ${t.title} (${fmt(t.price)} руб/чел)\nИмя: ${name}\nТелефон: ${phone}` +
+        const msg = `Приветствую! Заявка с сайта.\nТур: ${t.title} (${fmt(t.price)} руб/чел)\nИмя: ${name}\nТелефон: ${phone}` +
             (people ? `\nЧеловек: ${people}` : "") + (note ? `\nКомментарий: ${note}` : "");
         window.open(waLink(msg), "_blank");
     });
 
     /* ---- контакты и соцсети в подвале ---- */
     const footWa = document.getElementById("footWa");
-    footWa.href = waLink("Здравствуйте! Интересуют туры.");
+    footWa.href = waLink("Приветствую! Пишу по поводу туров.");
     footWa.target = "_blank";
     footWa.rel = "noopener";
     footWa.insertAdjacentHTML("afterbegin", ICON_WA);
