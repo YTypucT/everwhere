@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -316,6 +315,16 @@
             outline-offset: 2px
         }
 
+        /* мобильная подсветка тап-таргета: при тапе по стрелке/точке карусели
+           браузер подсвечивал ВСЮ карточку (она кликабельна: role=button,
+           tabindex, обработчик клика). Гасим её у карточки и у самих контролов.
+           Клавиатурный фокус (.card:focus-visible выше) при этом сохраняется. */
+        .card,
+        .c-arrow,
+        .c-dot {
+            -webkit-tap-highlight-color: transparent
+        }
+
         .card-img {
             aspect-ratio: 3/2;
             background-size: cover;
@@ -357,8 +366,10 @@
 
         .c-slide {
             flex: 0 0 100%;
+            width: 100%;
             height: 100%;
-            background-size: cover;
+            object-fit: cover;         /* для <img>-слайдов */
+            background-size: cover;    /* для div-заглушки (градиент) */
             background-position: center
         }
 
@@ -1487,7 +1498,12 @@
                           точками и свайпом (на телефоне). Если задан —
                           используется вместо img. Стрелки/точки появляются
                           автоматически, только когда фото больше одного.
-                          Пример: images: ["photos/x/1.jpg", "photos/x/2.jpg"]
+                          Путь пиши на ИСХОДНОЕ имя: "photos/x/1.webp"
+                          (можно и без расширения: "photos/x/1"). Движок сам
+                          подставит -400/-800/-1200.webp через srcset — эти
+                          файлы готовит скрипт cut-photos.js. Оригинал 3700px
+                          в вёрстку не идёт, браузер берёт нужную ширину сам.
+                          Пример: images: ["photos/x/1.webp", "photos/x/2.webp"]
           • img         — одиночное фото (fallback, если images не задан).
 
           • dates       — массив ближайших заездов (строки). Показывается
@@ -1620,18 +1636,39 @@
         return [];
     }
 
-    /* фон одного слайда: реальное фото или градиент-заглушка */
-    function slideBg(url, i) {
-        if (url) return `background-image:url('${esc(url)}')`;
-        const [a, b] = palettes[i % palettes.length];
-        return `background-image:linear-gradient(150deg,${a},${b})`;
+    /* ---- responsive-варианты фото ----
+       Из пути к исходнику ("photos/x/a.webp" или базы "photos/x/a")
+       собираем srcset на ширины из IMG_WIDTHS. Файлы -400/-800/-1200.webp
+       готовит скрипт cut-photos.js. src (дефолт для старых браузеров) — 800. */
+    const IMG_WIDTHS  = [400, 800, 1200];
+    const SIZES_CARD  = "(max-width: 560px) 100vw, 340px";   // карточка в сетке
+    const SIZES_MODAL = "(max-width: 600px) 100vw, 560px";   // фото в модалке
+
+    function variants(url) {
+        const base = esc(String(url).replace(/\.(jpe?g|png|webp)$/i, "")); // отрезаем расширение, если есть
+        const srcset = IMG_WIDTHS.map(w => `${base}-${w}.webp ${w}w`).join(", ");
+        return { src: `${base}-800.webp`, srcset };
     }
 
-    /* разметка карусели. Стрелки/точки — только если фото > 1 */
-    function carouselHtml(images, paletteIdx) {
+    /* один слайд: <img> для реального фото, div с градиентом для заглушки.
+       eager=true → первый (видимый) слайд грузится сразу, остальные — lazy. */
+    function slideHtml(url, i, sizes, eager) {
+        if (!url) {
+            const [a, b] = palettes[i % palettes.length];
+            return `<div class="c-slide" style="background-image:linear-gradient(150deg,${a},${b})"></div>`;
+        }
+        const { src, srcset } = variants(url);
+        return `<img class="c-slide" src="${src}" srcset="${srcset}" sizes="${sizes}"` +
+            ` loading="${eager ? "eager" : "lazy"}" decoding="async" alt="">`;
+    }
+
+    /* разметка карусели. Стрелки/точки — только если фото > 1.
+       sizes — под контекст (карточка/модалка); по умолчанию карточка. */
+    function carouselHtml(images, paletteIdx, sizes) {
+        sizes = sizes || SIZES_CARD;
         const list = images.length ? images : [""];               // хотя бы один слайд-заглушка
         const slides = list.map((u, si) =>
-            `<div class="c-slide" style="${slideBg(u, paletteIdx + si)}"></div>`).join("");
+            slideHtml(u, paletteIdx + si, sizes, si === 0)).join("");
 
         let controls = "";
         if (list.length > 1) {
@@ -1811,7 +1848,7 @@
         // пересобираем карусель в шапке модалки, сохраняя кнопку-крестик
         const mImg = document.getElementById("mImg");
         [...mImg.querySelectorAll(".c-track, .c-arrow, .c-dots")].forEach(n => n.remove());
-        mImg.insertAdjacentHTML("afterbegin", carouselHtml(getImages(t), i));
+        mImg.insertAdjacentHTML("afterbegin", carouselHtml(getImages(t), i, SIZES_MODAL));
         initCarousel(mImg);
 
         document.getElementById("mTitle").textContent = t.title;
@@ -1898,40 +1935,4 @@
     renderAbout();
 </script>
 </body>
-</html><script>
-    (function() {
-        var ws = new WebSocket('ws://' + window.location.host +
-            '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
-            'referrer=' + encodeURIComponent(window.location.pathname));
-        ws.onmessage = function (msg) {
-            if (msg.data === 'reload') {
-                window.location.reload();
-            }
-            if (msg.data.startsWith('update-css ')) {
-                var messageId = msg.data.substring(11);
-                var links = document.getElementsByTagName('link');
-                for (var i = 0; i < links.length; i++) {
-                    var link = links[i];
-                    if (link.rel !== 'stylesheet') continue;
-                    var clonedLink = link.cloneNode(true);
-                    var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
-                    if (newHref !== link.href) {
-                        clonedLink.href = newHref;
-                    }
-                    else {
-                        var indexOfQuest = newHref.indexOf('?');
-                        if (indexOfQuest >= 0) {
-                            // to support ?foo#hash
-                            clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
-                                newHref.substring(indexOfQuest + 1);
-                        }
-                        else {
-                            clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
-                        }
-                    }
-                    link.replaceWith(clonedLink);
-                }
-            }
-        };
-    })();
-</script>
+</html>
