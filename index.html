@@ -852,6 +852,237 @@
         }
 
         /* ============================================================
+           FAQ  (компактный аккордеон в 2 колонки, сгруппирован по темам;
+           первая группа видна, остальные — под кнопкой «Показать ещё».
+           Рендерится из FAQ[].)
+           Приоритет секции намеренно занижен: заголовок мельче, чем у
+           «Туров», а маркеры «+» приглушены (охряными становятся только
+           при наведении/раскрытии) — чтобы блок не перетягивал внимание.
+           Сигнатура прежняя: «глазки»-заголовки групп + маркер «+»→«×».
+           ============================================================ */
+        .faq {
+            background: var(--paper);
+            padding: 60px 0            /* ниже ростом, чем секции-«герои» (84px) */
+        }
+
+        /* заголовок секции — мельче главных, чтобы не спорить за приоритет */
+        .faq .section-head {
+            margin-bottom: 30px
+        }
+
+        .faq .section-head h2 {
+            font-size: clamp(1.4rem, 3vw, 1.9rem)
+        }
+
+        .faq .section-head .sub {
+            max-width: 48ch
+        }
+
+        .faq-groups {
+            display: grid;
+            gap: 26px
+        }
+
+        /* заголовок тематической группы — «глазок» в фирменном стиле */
+        .faq-group > .fg-head {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 600;
+            font-size: .74rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--ochre-deep);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .faq-group > .fg-head::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line)
+        }
+
+        /* две НЕЗАВИСИМЫЕ колонки: раскрытие пункта толкает только свою
+           колонку, без «прыжков» соседней. На узком экране — одна колонка;
+           вопросы делятся пополам (первые → левая), поэтому при стеке
+           порядок чтения сохраняется. */
+        .faq-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 44px;
+            align-items: start
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--line)
+        }
+
+        /* кнопка-вопрос: нативный <button> — доступность и клавиатура из коробки */
+        .faq-q {
+            width: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--ink);
+            padding: 13px 40px 13px 0;
+            position: relative;
+            display: block;
+            line-height: 1.4;
+            transition: color .15s;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        .faq-q:hover {
+            color: var(--ochre-deep)
+        }
+
+        .faq-q:focus-visible {
+            outline: 3px solid var(--ochre);
+            outline-offset: 3px;
+            border-radius: 6px
+        }
+
+        /* маркер «+»: по умолчанию нейтральный (--stone), охряным становится
+           только при наведении и в раскрытом виде — так вертикальная «дорожка»
+           маркеров не тянет взгляд. При раскрытии вертикаль исчезает → «×»→«−». */
+        .faq-q .fq-mark {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%)
+        }
+
+        .faq-q .fq-mark::before,
+        .faq-q .fq-mark::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background: var(--stone);
+            border-radius: 2px;
+            transition: transform .25s ease, opacity .2s ease, background .15s
+        }
+
+        .faq-q .fq-mark::before {           /* горизонталь */
+            width: 13px;
+            height: 2px;
+            transform: translate(-50%, -50%)
+        }
+
+        .faq-q .fq-mark::after {            /* вертикаль → исчезает при раскрытии */
+            width: 2px;
+            height: 13px;
+            transform: translate(-50%, -50%)
+        }
+
+        .faq-q:hover .fq-mark::before,
+        .faq-q:hover .fq-mark::after,
+        .faq-q[aria-expanded="true"] .fq-mark::before {
+            background: var(--ochre)
+        }
+
+        .faq-q[aria-expanded="true"] .fq-mark::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+            opacity: 0
+        }
+
+        /* панель ответа: max-height анимируется, точное значение ставит JS (scrollHeight) */
+        .faq-a {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .3s ease
+        }
+
+        .faq-a-inner {
+            padding: 0 40px 16px 0;
+            color: #3c453f;
+            font-size: .95rem;
+            line-height: 1.6
+        }
+
+        /* скрытые группы + кнопка «Показать ещё» */
+        .faq-more {
+            display: grid;
+            gap: 26px;
+            margin-top: 26px
+        }
+
+        .faq-more[hidden] {                 /* перебиваем display:grid выше, когда свёрнуто */
+            display: none
+        }
+
+        .faq-more-wrap {
+            margin-top: 22px
+        }
+
+        .faq-more-btn {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: .92rem;
+            color: var(--ochre-deep);
+            background: none;
+            border: none;
+            border-bottom: 1.5px solid transparent;
+            padding: 4px 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .15s, border-color .15s;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        .faq-more-btn:hover {
+            border-bottom-color: var(--ochre)
+        }
+
+        .faq-more-btn:focus-visible {
+            outline: 3px solid var(--ochre);
+            outline-offset: 3px;
+            border-radius: 6px
+        }
+
+        .faq-more-btn .chev {
+            font-size: .8em;
+            transition: transform .2s
+        }
+
+        .faq-more-btn[aria-expanded="true"] .chev {
+            transform: rotate(180deg)
+        }
+
+        /* узкий экран: колонки схлопываются в одну (порядок сохранён — см. выше) */
+        @media (max-width: 720px) {
+            .faq-cols {
+                grid-template-columns: 1fr;
+                gap: 0
+            }
+        }
+
+        @media (max-width: 560px) {
+            .faq {
+                padding: 48px 0
+            }
+
+            .faq-q {
+                font-size: .98rem;
+                padding-right: 34px
+            }
+
+            .faq-a-inner {
+                padding-right: 0
+            }
+        }
+
+        /* ============================================================
            ПОДВАЛ  (компактная сетка: бренд + 2 колонки ссылок + нижняя полоса)
            ============================================================ */
         footer {
@@ -1292,6 +1523,7 @@
         <nav class="nav-links">
             <a href="#about" class="navlink">Обо мне</a>
             <a href="#why" class="navlink">Почему со мной</a>
+            <a href="#faq" class="navlink">Вопросы</a>
             <a href="#tours" class="cta">Смотреть туры</a>
         </nav>
     </div>
@@ -1379,10 +1611,27 @@
         <div class="tours-follow" id="toursFollow" hidden>
             <div class="tf-text">
                 <h3>Всё ещё сомневаешься?</h3>
-                <p>Истории и фото/видео из прошедших туров, новые маршруты, свободные места и открытые даты я публикую в Telegram-канале.</p>
+                <p>Отзывы и истории, фото и видео из прошедших туров; новые маршруты и свободные даты я публикую в Telegram-канале.</p>
             </div>
             <a class="tf-btn" id="toursFollowBtn" target="_blank" rel="noopener"></a>
         </div>
+    </div>
+</section>
+
+<div class="ornament"></div>
+
+<!-- ============================================================
+     FAQ  (рендерится из массива FAQ — см. скрипт ниже)
+     ============================================================ -->
+<section class="section faq" id="faq">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <h2>Частые вопросы</h2>
+                <p class="sub"><br>Не нашёл свой вопрос, напиши по любым контактам и я отвечу лично.</p>
+            </div>
+        </div>
+        <div class="faq-groups" id="faqGroups"></div>
     </div>
 </section>
 
@@ -1601,6 +1850,88 @@
     ];
 
     /* ============================================================
+       3.5) FAQ
+
+          Группы и вопросы идут в том же порядке, что и на странице.
+          Правишь здесь — меняется и секция на сайте, и микроразметка
+          для поиска (schema.org FAQPage): она собирается из этого же
+          массива автоматически, дублировать ничего не нужно.
+
+          Структура: массив групп, у каждой:
+          • group — заголовок темы («глазок» над блоком вопросов)
+          • items — массив { q: "вопрос", a: "ответ" }
+
+          В ответе можно писать несколько абзацев: раздели их \n\n
+          (движок сам разобьёт на <p>). Обычный перенос строки в схему
+          для поиска не идёт — там ответ склеивается в один текст.
+       ============================================================ */
+    const FAQ = [
+        {
+            group: "Как всё устроено",
+            items: [
+                {
+                    q: "Как оставить заявку и что происходит дальше?",
+                    a: "Нажми на карточку тура и заполни короткую форму → откроется WhatsApp с готовым сообщением. Или напиши мне напрямую в Telegram либо WhatsApp. Заявка ни к чему не обязывает — это просто старт диалога, в котором мы обсудим все детали и условия.",
+                },
+                {
+                    q: "Что входит в стоимость тура?",
+                    a: "В каждой карточке расписано, что входит в цену. А по запросу я пришлю в личные сообщения подробную программу, где ещё раз полностью перечислено, что включено, а что оплачивается отдельно.",
+                },
+                {
+                    q: "Можно ли изменить что-то в программе?",
+                    a: "Да. Если хочешь доработать маршрут, добавить или убрать активность или собрать что-то только под себя — напиши, придумаем.",
+                },
+                {
+                    q: "На каком языке проходят туры?",
+                    a: "Веду лично я, в основном на русском. При необходимости могу и на английском.",
+                },
+                {
+                    q: "Как добраться до старта тура?",
+                    a: "Авиаперелёт до города старта оплачивается самостоятельно. А трансфер от аэропорта и обратно уже организован и входит в стоимость тура, на месте я тебя встречу.",
+                },
+            ],
+        },
+        {
+            group: "Подготовка и безопасность",
+            items: [
+                {
+                    q: "Нужен ли опыт в активностях, чтобы поехать?",
+                    a: "Нет. Туры рассчитаны на людей в хорошей физической форме, но конкретные навыки иметь не обязательно. Все активности проходят с инструкторами, которые обучают базе прямо на месте.",
+                },
+                {
+                    q: "Безопасны ли туры?",
+                    a: "Каждую активность я пробую сам по несколько раз. На более экстремальных всегда есть профессиональные инструкторы и проверенная экипировка. Любая активность несёт риски, но в туре они просчитаны и контролируемы.",
+                },
+                {
+                    q: "Есть ли ограничения по участию?",
+                    a: "Тур средней сложности, и главное здесь выносливость. Лучше уточнять по конкретному туру, но ориентир такой: если можешь пробежать 1 км или пройти пешком 7–8 км по пересечённой местности, а потом нормально функционировать — тебе подойдёт."
+                },
+                {
+                    q: "Нужна ли страховка?",
+                    a: "Оформлять обязательно не требуется, но по желанию можешь. Кроме того, на месте для самых экстремальных активностей предложу оформить страховку на месте.",
+                },
+            ],
+        },
+        {
+            group: "Деньги и документы",
+            items: [
+                {
+                    q: "Как проходит оплата?",
+                    a: "Предоплата 20% (возвращается при отмене более чем за 7 суток до старта), остальное — по прилёте на место. Оплату можно произвести на карты российских банков, а также карты Казахстана и Кыргызстана или через крипту.",
+                },
+                {
+                    q: "Как проходит отмена и возврат?",
+                    a: "При отмене более чем за 7 суток до начала тура предоплата 20% возвращается полностью — тем же способом, которым была внесена. При отмене менее чем за 7 суток предоплата не возвращается.",
+                },
+                {
+                    q: "Нужна ли виза?",
+                    a: "В основном туры проходят в безвизовых странах. Если для конкретного тура виза нужна, это указано в карточке и в подробной программе.",
+                },
+            ],
+        },
+    ];
+
+    /* ============================================================
        4) Дальше — движок. Трогать не обязательно.
        ============================================================ */
     const palettes = [["#0d3b40", "#16585c"], ["#7a4a23", "#b5793a"], ["#3a4a2e", "#5e7544"], ["#3d2a4a", "#6a4a7a"], ["#1f3a52", "#356088"]];
@@ -1810,6 +2141,147 @@
         }
     }
 
+    /* ---- FAQ: компактный аккордеон + микроразметка FAQPage ----
+       Каждая группа — «глазок»-заголовок и вопросы в ДВЕ независимые колонки
+       (раскрытие толкает только свою колонку). Первая группа видна всегда,
+       остальные скрыты под кнопкой «Показать ещё N вопросов». Схема FAQPage
+       строится из всего массива FAQ независимо от того, что скрыто. */
+    function renderFAQ() {
+        const root = document.getElementById("faqGroups");
+        if (!root || !Array.isArray(FAQ) || !FAQ.length) return;
+        root.innerHTML = "";
+
+        let uid = 0;
+
+        // один вопрос-ответ (аккордеон-элемент)
+        function buildItem(item) {
+            uid++;
+            const paras = String(item.a).split(/\n\n+/).filter(Boolean);
+
+            const wrap = document.createElement("div");
+            wrap.className = "faq-item";
+            wrap.innerHTML = `
+        <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-${uid}">
+            ${esc(item.q)}<span class="fq-mark" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a" id="faq-a-${uid}" role="region">
+            <div class="faq-a-inner">${paras.map(p => `<p style="margin:0 0 10px">${esc(p)}</p>`).join("")}</div>
+        </div>`;
+
+            // подчистим лишний нижний отступ у последнего абзаца
+            const inner = wrap.querySelector(".faq-a-inner");
+            if (inner.lastElementChild) inner.lastElementChild.style.marginBottom = "0";
+
+            const btn = wrap.querySelector(".faq-q");
+            const panel = wrap.querySelector(".faq-a");
+            btn.addEventListener("click", () => toggleFaq(btn, panel));
+            return wrap;
+        }
+
+        // одна группа: заголовок + вопросы в две колонки.
+        // Делим пополам (первые → левая): при стеке на мобилке порядок сохраняется.
+        function buildGroup(group) {
+            const g = document.createElement("div");
+            g.className = "faq-group";
+
+            const head = document.createElement("div");
+            head.className = "fg-head";
+            head.textContent = group.group;
+            g.appendChild(head);
+
+            const cols = document.createElement("div");
+            cols.className = "faq-cols";
+            const colL = document.createElement("div");
+            const colR = document.createElement("div");
+            cols.append(colL, colR);
+
+            const items = group.items || [];
+            const half = Math.ceil(items.length / 2);
+            items.forEach((item, idx) => (idx < half ? colL : colR).appendChild(buildItem(item)));
+
+            g.appendChild(cols);
+            return g;
+        }
+
+        // первая группа видна всегда
+        root.appendChild(buildGroup(FAQ[0]));
+
+        // остальные группы — под кнопкой «Показать ещё N вопросов»
+        const rest = FAQ.slice(1);
+        const restCount = rest.reduce((n, g) => n + (g.items ? g.items.length : 0), 0);
+        if (rest.length && restCount) {
+            const more = document.createElement("div");
+            more.className = "faq-more";
+            more.id = "faqMore";
+            more.hidden = true;
+            rest.forEach(g => more.appendChild(buildGroup(g)));
+            root.appendChild(more);           // раскроется НАД кнопкой
+
+            const wrap = document.createElement("div");
+            wrap.className = "faq-more-wrap";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "faq-more-btn";
+            btn.setAttribute("aria-controls", "faqMore");
+
+            const setState = open => {
+                btn.setAttribute("aria-expanded", open ? "true" : "false");
+                btn.innerHTML = open
+                    ? `<span>Свернуть</span><span class="chev" aria-hidden="true">▾</span>`
+                    : `<span>Показать ещё ${restCount} ${plural(restCount, "вопрос", "вопроса", "вопросов")}</span><span class="chev" aria-hidden="true">▾</span>`;
+            };
+            setState(false);
+
+            btn.addEventListener("click", () => {
+                const open = btn.getAttribute("aria-expanded") === "true";
+                more.hidden = open;           // открыто → скрыть; скрыто → показать
+                setState(!open);
+            });
+
+            wrap.appendChild(btn);
+            root.appendChild(wrap);
+        }
+
+        // recompute высоты открытых панелей при ресайзе (перенос строк меняет высоту)
+        window.addEventListener("resize", () => {
+            root.querySelectorAll('.faq-q[aria-expanded="true"]').forEach(b => {
+                const p = document.getElementById(b.getAttribute("aria-controls"));
+                if (p) p.style.maxHeight = p.scrollHeight + "px";
+            });
+        });
+
+        injectFaqSchema();
+    }
+
+    function toggleFaq(btn, panel) {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+        panel.style.maxHeight = open ? "0px" : panel.scrollHeight + "px";
+    }
+
+    /* schema.org FAQPage — собираем из того же массива FAQ и кладём в <head>.
+       Помогает поисковикам показывать вопросы прямо в выдаче. */
+    function injectFaqSchema() {
+        const items = FAQ.flatMap(g => g.items || []);
+        if (!items.length) return;
+        const data = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": items.map(it => ({
+                "@type": "Question",
+                "name": it.q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": String(it.a).replace(/\n+/g, " ").trim()
+                }
+            }))
+        };
+        const s = document.createElement("script");
+        s.type = "application/ld+json";
+        s.textContent = JSON.stringify(data);
+        document.head.appendChild(s);
+    }
+
     /* ---- сборка описания тура из блоков ---- */
     function renderTourBody(t) {
         let html = "";
@@ -1933,6 +2405,7 @@
 
     renderTours();
     renderAbout();
+    renderFAQ();
 </script>
 </body>
 </html>
